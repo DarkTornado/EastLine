@@ -8,7 +8,7 @@ var now = 60*60*date.getHours() + 60*date.getMinutes() + date.getSeconds();
 var data = fs.readFileSync('time_table_20220401_0.json').toString();
 data = JSON.parse(data);
 
-var stas = ["태화강","개운포","덕하","망양","남창","서생","월내","좌천","일광","기장","오시리아","송정","신해운대","벡스코","센텀","재송","부산원동","안락","동래","교대","거제","거제해맞이","부전"];
+var stas = ['부전', '거제해맞이', '거제', '교대', '동래', '안락', '부산원동', '재송', '센텀', '벡스코', '신해운대', '송정', '오시리아', '기장', '일광', '좌천', '월내', '서생', '남창', '망양', '덕하', '개운포', '태화강'];
 var result = [];
 stas.forEach((e, i) => {
 result[i] = {
@@ -28,13 +28,9 @@ if(now < tym) continue;
 
 /* 상/하행 구분 및 위치 가지고 옴 */
 var num = Number(train[train.length-1]);
-var ud = 'up';
-var index = getTrainLocation(time);
-if(num%2==0) {
-ud = 'down';
-index = stas.length - index - 1;
-}
-
+var ud = num%2==0?'up':'down';
+var sta = getTrainLocation(time);
+var index = stas.indexOf(sta);
 result[index][ud] = train;
 }
 fs.writeFileSync('result.json', JSON.stringify(result, null, 4));
@@ -43,8 +39,8 @@ fs.writeFileSync('result.json', JSON.stringify(result, null, 4));
 function getTrainLocation(time) {
 for (n = time.length - 1; n >= 0; n--) {
 var tym = timeToSec(time[n].time);
-if(now==tym) return n;
-if(now > tym) return n + 1;
+if(now==tym) return time[n].station;
+if(tym < now) return time[n + 1].station;
 }
 return 0;
 }
