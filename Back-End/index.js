@@ -1,4 +1,10 @@
 const fs = require('fs');
+const http = require('http');
+http.createServer((req, res) => {
+res.writeHead(200, {
+    'Content-Type': 'application/json; charset=utf-8;',
+    'Access-Control-Allow-Origin': '*'
+});
 
 /* 원활한 시간 비교를 위해 초 단위로 변환 */
 var date = new Date();
@@ -33,7 +39,9 @@ var sta = getTrainLocation(time);
 var index = stas.indexOf(sta);
 result[index][ud] = train;
 }
-fs.writeFileSync('result.json', JSON.stringify(result, null, 4));
+res.write(JSON.stringify(result, null, 4));
+res.end();
+}).listen(80);
 
 /* 시간 기반으로 열차의 위치를 가지고 옴 */
 function getTrainLocation(time) {
