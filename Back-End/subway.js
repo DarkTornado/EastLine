@@ -12,6 +12,8 @@ stas.forEach((e) => {
     });
 });
 
+/* 타임 존 한국으로 변경 */
+process.env.TZ = 'Asia/Seoul';
 
 /* 원활한 시간 비교를 위해 초 단위로 변환 */
 var date = new Date();
